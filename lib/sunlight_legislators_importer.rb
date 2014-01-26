@@ -1,17 +1,34 @@
 require 'csv'
+require 'pry'
+require './app/models/legislator.rb'
 
 class SunlightLegislatorsImporter
   def self.import(filename)
+    atts = [
+    :title,
+    :firstname,
+    :lastname,
+    :party,
+    :state,
+    :in_office,
+    :gender,
+    :phone,
+    :twitter_id,
+    :birthdate]
     csv = CSV.new(File.open(filename), :headers => true)
     csv.each do |row|
+      hash = {}
       row.each do |field, value|
-        # TODO: begin
-        raise NotImplementedError, "TODO: figure out what to do with this row and do it!"
-        # TODO: end
+        if atts.include?(field.to_sym)
+          hash[field.to_sym] = value
+        end
       end
+      Legislator.create(hash)
     end
   end
 end
+
+# SunlightLegislatorsImporter.import("./db/data/legislators.csv")
 
 # IF YOU WANT TO HAVE THIS FILE RUN ON ITS OWN AND NOT BE IN THE RAKEFILE, UNCOMMENT THE BELOW
 # AND RUN THIS FILE FROM THE COMMAND LINE WITH THE PROPER ARGUMENT.
